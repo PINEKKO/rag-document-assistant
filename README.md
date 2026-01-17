@@ -7,6 +7,12 @@
 
 Production-ready RAG system with multi-provider LLM support (OpenAI, Claude, Ollama), vector database integration, FastAPI backend, and MLflow evaluation. Features German language support and Streamlit UI.
 
+## What This Does
+
+Imagine you have hundreds of documents; manuals, reports, contracts. Instead of reading through all of them to find an answer, you simply ask a question in plain language: *"What are the warranty terms for product X?"* or *"Summarize the key findings from last quarter."*
+
+This application reads your documents, understands their content, and answers your questions accurately; citing exactly where it found the information. It works in both English and German, and you can choose which AI assistant (ChatGPT, Claude, or a private local model) answers your questions.
+
 ## Features
 
 - **Multi-Provider LLM Support**: OpenAI GPT-4o, Anthropic Claude, Ollama (local models)
@@ -199,6 +205,3 @@ MIT License
 ## Author
 
 Alberto Díaz-Durana
-
----
-
