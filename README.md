@@ -5,24 +5,32 @@
 [![LangChain](https://img.shields.io/badge/LangChain-0.1+-orange.svg)](https://langchain.com/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
-Production-ready RAG system with multi-provider LLM support (OpenAI, Claude, Ollama), vector database integration, FastAPI backend, and MLflow evaluation. Features German language support and Streamlit UI.
+Production-ready RAG system with multi-provider LLM support (OpenAI, Anthropic, Ollama), ChromaDB vector database, FastAPI backend, and MLflow evaluation.
 
 ## What This Does
 
 Imagine you have hundreds of documents; manuals, reports, contracts. Instead of reading through all of them to find an answer, you simply ask a question in plain language: *"What are the warranty terms for product X?"* or *"Summarize the key findings from last quarter."*
 
-This application reads your documents, understands their content, and answers your questions accurately; citing exactly where it found the information. It works in both English and German, and you can choose which AI assistant (ChatGPT, Claude, or a private local model) answers your questions.
+This application reads your documents, understands their content, and answers your questions accurately; citing exactly where it found the information. You can choose which AI provider (OpenAI, Anthropic, or a local Ollama model) answers your questions.
 
 ## Features
 
-- **Multi-Provider LLM Support**: OpenAI GPT-4o, Anthropic Claude, Ollama (local models)
-- **Vector Database Integration**: ChromaDB (local), Pinecone (cloud)
+### Implemented (Sprint 1)
+
+- **Multi-Provider LLM Support**: OpenAI, Anthropic, Ollama (local models)
+- **Vector Database**: ChromaDB with OpenAI embeddings
 - **Document Processing**: PDF, Markdown, TXT with configurable chunking
+- **RAG Chain**: Retrieval-augmented generation with conversation memory
 - **FastAPI Backend**: REST API with async document processing
-- **MLflow Evaluation**: Experiment tracking with custom RAG metrics
-- **German Language Support**: Multilingual embeddings and prompts
+- **MLflow Evaluation**: Experiment tracking with faithfulness/relevance metrics
+
+### Planned (Sprint 2)
+
 - **Streamlit UI**: Interactive document upload and chat interface
+- **German Language Support**: Multilingual embeddings and prompts
+- **Pinecone Integration**: Cloud vector database option
 - **Hybrid Search**: Semantic + keyword (BM25) retrieval
+- **Docker Deployment**: Containerized production setup
 
 ## Quick Start
 
@@ -58,8 +66,8 @@ pip install -e ".[dev]"
 cp .env.example .env
 
 # Edit .env with your API keys
-# Required: OPENAI_API_KEY
-# Optional: ANTHROPIC_API_KEY, PINECONE_API_KEY
+# Required: OPENAI_API_KEY (for embeddings)
+# Optional: ANTHROPIC_API_KEY (for Claude LLM)
 ```
 
 ### Run the Application
@@ -68,8 +76,7 @@ cp .env.example .env
 # Start FastAPI backend
 uvicorn src.api.main:app --reload
 
-# In another terminal, start Streamlit UI
-streamlit run app/streamlit_app.py
+# API docs available at http://localhost:8000/docs
 ```
 
 ## Project Structure
@@ -79,16 +86,17 @@ rag-document-assistant/
 ├── src/
 │   ├── ingestion/          # Document loaders and chunking
 │   ├── vectorstore/        # Embeddings and vector database
-│   ├── retrieval/          # RAG chain and reranking
+│   ├── retrieval/          # RAG chain with memory
 │   ├── llm/                # LLM providers and prompts
 │   ├── api/                # FastAPI backend
 │   └── evaluation/         # MLflow metrics
-├── app/
-│   └── streamlit_app.py    # Streamlit interface
-├── tests/                  # Unit and integration tests
+├── tests/                  # Unit tests (84 tests)
 ├── data/
-│   └── sample_docs/        # Example documents
-└── docs/                   # Architecture documentation
+│   ├── sample_docs/        # Example documents
+│   └── eval/               # Evaluation test dataset
+└── docs/
+    ├── checkpoints/        # Sprint progress
+    └── decisions/          # Architecture decisions
 ```
 
 ## API Endpoints
@@ -96,9 +104,11 @@ rag-document-assistant/
 | Endpoint | Method | Description |
 |----------|--------|-------------|
 | `/health` | GET | Health check |
-| `/ingest` | POST | Upload and index documents |
-| `/query` | POST | Query the RAG system |
-| `/models` | GET | List available LLM providers |
+| `/api/v1/ingest` | POST | Upload and index documents |
+| `/api/v1/query` | POST | Query the RAG system |
+| `/api/v1/models` | GET | List available LLM providers |
+| `/api/v1/documents/count` | GET | Get indexed document count |
+| `/api/v1/documents` | DELETE | Clear all documents |
 
 ## Configuration
 
@@ -123,11 +133,7 @@ OLLAMA_MODEL=llama3.2
 ```python
 # ChromaDB (default, local)
 VECTOR_DB=chroma
-
-# Pinecone (cloud)
-VECTOR_DB=pinecone
-PINECONE_API_KEY=...
-PINECONE_INDEX=rag-documents
+CHROMA_PERSIST_DIR=./chroma_db
 ```
 
 ## Hardware Requirements
@@ -164,7 +170,7 @@ mypy src/
 mlflow ui
 
 # Run evaluation pipeline
-python -m src.evaluation.run_eval
+python -m src.evaluation.runner
 ```
 
 Tracked metrics:
@@ -176,25 +182,28 @@ Tracked metrics:
 
 | Category | Technologies |
 |----------|--------------|
-| **LLM Orchestration** | LangChain, LangGraph |
+| **LLM Orchestration** | LangChain |
 | **LLM Providers** | OpenAI, Anthropic, Ollama |
-| **Vector Database** | ChromaDB, Pinecone |
-| **Embeddings** | OpenAI ada-002, HuggingFace multilingual-e5 |
+| **Vector Database** | ChromaDB |
+| **Embeddings** | OpenAI text-embedding-ada-002 |
 | **Backend** | FastAPI, Pydantic, uvicorn |
 | **Evaluation** | MLflow |
-| **UI** | Streamlit |
-| **Testing** | pytest, pytest-cov |
+| **Testing** | pytest, pytest-cov (84 tests, 73% coverage) |
 
 ## Roadmap
 
+### Sprint 1 (Complete)
 - [x] Project setup
-- [ ] Document ingestion pipeline
-- [ ] Vector database integration
-- [ ] RAG chain with LLM providers
-- [ ] FastAPI backend
-- [ ] MLflow evaluation
+- [x] Document ingestion pipeline (PDF, MD, TXT)
+- [x] Vector database integration (ChromaDB)
+- [x] RAG chain with multi-provider LLM support
+- [x] FastAPI backend with REST API
+- [x] MLflow evaluation framework
+
+### Sprint 2 (Planned)
 - [ ] Streamlit UI
 - [ ] German language support
+- [ ] Pinecone cloud vector database
 - [ ] Hybrid search (BM25 + semantic)
 - [ ] Docker deployment
 
