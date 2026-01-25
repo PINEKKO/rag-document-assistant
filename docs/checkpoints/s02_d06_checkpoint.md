@@ -20,13 +20,18 @@ Build interactive Streamlit frontend for document upload and Q&A with source cit
 - [x] Document management (count, clear all)
 - [x] Session state management
 - [x] End-to-end testing with sample documents
+- [x] Multi-source conflict detection experiment (EXP-001)
+- [x] User guidance and limitations documentation
 
 ## Outputs
 
 | Type | Path | Description |
 |------|------|-------------|
-| App | `app/streamlit_app.py` | Main Streamlit application (236 lines) |
+| App | `app/streamlit_app.py` | Main Streamlit application (~250 lines) |
 | Decision | `docs/decisions/DEC-002_streamlit-architecture.md` | Architecture decision record |
+| Experiment | `docs/experiments/EXP-001_multi-source-detection.md` | Conflict detection experiment |
+| Test Data | `data/experiments/policy_2023.md` | Test policy file (30-day refund) |
+| Test Data | `data/experiments/policy_2024.md` | Test policy file (60-day refund) |
 
 ## Features Implemented
 
@@ -88,6 +93,51 @@ DEC-002: Streamlit UI Architecture
 - HTTP communication over direct imports
 - Sidebar + main layout
 - Native chat components
+
+---
+
+## Experiments Conducted
+
+### EXP-001: Multi-Source Conflict Detection
+
+**Reference:** [docs/experiments/EXP-001_multi-source-detection.md](../experiments/EXP-001_multi-source-detection.md)
+
+**Objective:** Test whether the RAG system can identify and cite different sources when documents contain conflicting information.
+
+**Setup (per DSM C.1 Experiment Tracking):**
+| Parameter | Value |
+|-----------|-------|
+| experiment_name | multi-source-conflict-detection |
+| LLM Provider | OpenAI (gpt-4o-mini) |
+| Retrieval k | 4 |
+| Embeddings | text-embedding-ada-002 |
+| Test Files | policy_2023.md, policy_2024.md |
+
+**Results Summary:**
+
+| Query Type | Multi-Source Detection | Conflict Identification |
+|------------|------------------------|------------------------|
+| Simple question | Partial | No |
+| Explicit "differences" query | Yes | Yes |
+| Question with implicit conflict | Yes | Yes |
+
+**Key Findings:**
+1. Retrieval works correctly - both conflicting sources retrieved
+2. Citation inconsistent - simple queries may cite only one source
+3. Conflict detection depends on query phrasing
+4. LLM reasoning helps when context implies conflict
+
+**Limitations Identified:**
+- Single-answer queries may miss conflicts
+- No automatic version/date awareness
+- Relies on LLM reasoning, not systematic detection
+
+**Documentation Added:**
+- User guidance in UI (Tips & Limitations expander)
+- Limitations section in README
+- Future improvement roadmap in experiment doc
+
+---
 
 ## Cumulative Progress
 
