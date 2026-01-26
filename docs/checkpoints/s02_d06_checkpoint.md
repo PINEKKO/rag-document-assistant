@@ -139,6 +139,18 @@ DEC-002: Streamlit UI Architecture
 
 ---
 
+## Methodology Analysis
+
+**DSM Gap Identified:** While documenting EXP-001, found that DSM C.1 Experiment Tracking is optimized for ML experiments with numeric metrics. Capability experiments (qualitative pass/fail/partial results) lack a standardized template.
+
+**Action Taken:** Created enhancement proposal for DSM methodology:
+- Location: `D:\data-science\agentic-ai-data-science-methodology\plan\backlog\BACKLOG-001_capability-experiment-template.md`
+- Proposes C.1.1 Capability Experiment Template
+- References existing frameworks (RAGAS, MLflow) and identifies documentation gap
+- Status: Implemented
+
+---
+
 ## Cumulative Progress
 
 | Day | Feature | Status |

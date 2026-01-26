@@ -15,7 +15,7 @@ This application reads your documents, understands their content, and answers yo
 
 ## Features
 
-### Implemented (Sprint 1)
+### Implemented (Sprint 1 & 2)
 
 - **Multi-Provider LLM Support**: OpenAI, Anthropic, Ollama (local models)
 - **Vector Database**: ChromaDB with OpenAI embeddings
@@ -23,13 +23,13 @@ This application reads your documents, understands their content, and answers yo
 - **RAG Chain**: Retrieval-augmented generation with conversation memory
 - **FastAPI Backend**: REST API with async document processing
 - **MLflow Evaluation**: Experiment tracking with faithfulness/relevance metrics
+- **Streamlit UI**: Interactive document upload and chat interface with source citations
 
-### Planned (Sprint 2)
+### Planned (Sprint 3: Experiments & Optimization)
 
-- **Streamlit UI**: Interactive document upload and chat interface
-- **German Language Support**: Multilingual embeddings and prompts
-- **Pinecone Integration**: Cloud vector database option
-- **Hybrid Search**: Semantic + keyword (BM25) retrieval
+- **German Language Support**: Multilingual embeddings (HuggingFace e5) and prompts
+- **Hybrid Search**: Semantic + keyword (BM25) retrieval with fusion
+- **Performance & Robustness**: Caching, token tracking, adversarial testing
 - **Docker Deployment**: Containerized production setup
 
 ## Quick Start
@@ -90,13 +90,19 @@ rag-document-assistant/
 │   ├── llm/                # LLM providers and prompts
 │   ├── api/                # FastAPI backend
 │   └── evaluation/         # MLflow metrics
+├── app/
+│   └── streamlit_app.py    # Streamlit UI
 ├── tests/                  # Unit tests (84 tests)
 ├── data/
 │   ├── sample_docs/        # Example documents
-│   └── eval/               # Evaluation test dataset
+│   ├── eval/               # Evaluation test dataset
+│   └── experiments/        # Experiment test data
 └── docs/
     ├── checkpoints/        # Sprint progress
-    └── decisions/          # Architecture decisions
+    ├── decisions/          # Architecture decisions (DEC-###)
+    ├── experiments/        # Capability experiments (EXP-###)
+    ├── plan/               # Project and sprint plans
+    └── dsm-validation-tracker.md  # DSM methodology feedback
 ```
 
 ## API Endpoints
@@ -190,16 +196,32 @@ Tracked metrics:
 | **Evaluation** | MLflow |
 | **Testing** | pytest, pytest-cov (84 tests, 73% coverage) |
 
+## Experiments
+
+This project uses **experiment-driven development** to validate features systematically:
+
+| Experiment | Focus | Status | Documentation |
+|------------|-------|--------|---------------|
+| EXP-001 | Multi-source conflict detection | Complete | [View](docs/experiments/EXP-001_multi-source-detection.md) |
+| EXP-002 | Cross-lingual retrieval | Planned | Sprint 3, Day 7 |
+| EXP-003 | Retrieval strategy comparison | Planned | Sprint 3, Day 8 |
+| EXP-004 | Performance & robustness | Planned | Sprint 3, Day 9 |
+| EXP-005 | End-to-end validation | Planned | Sprint 3, Day 10 |
+
+Each experiment follows the [DSM C.1.3 Capability Experiment Template](https://github.com/albertodiazdurana/agentic-ai-data-science-methodology) with combined quantitative (RAGAS, RAGBench) and qualitative evaluation.
+
+**DSM Validation:** This project also validates the DSM methodology itself. Feedback is tracked in [dsm-validation-tracker.md](docs/dsm-validation-tracker.md).
+
 ## Known Limitations
 
-This MVP has the following limitations documented in [EXP-001](docs/experiments/EXP-001_multi-source-detection.md):
+Limitations are tracked per [DSM C.1.5 Limitation Discovery Protocol](https://github.com/albertodiazdurana/agentic-ai-data-science-methodology). Current limitations from [EXP-001](docs/experiments/EXP-001_multi-source-detection.md):
 
-| Limitation | Workaround |
-|------------|------------|
-| Simple queries may only cite one source | Ask "What do all documents say about X?" |
-| No automatic version/date awareness | Name files with dates (e.g., `policy_2024.md`) |
-| Documents persist until manually cleared | Use "Clear All Documents" button in UI |
-| Relies on LLM reasoning for conflict detection | Ask explicitly about differences between sources |
+| Limitation | Severity | Disposition | Workaround |
+|------------|----------|-------------|------------|
+| Simple queries may only cite one source | Medium | Accept MVP | Ask "What do all documents say about X?" |
+| No automatic version/date awareness | Low | Defer | Name files with dates (e.g., `policy_2024.md`) |
+| Documents persist until manually cleared | Low | Accept MVP | Use "Clear All Documents" button in UI |
+| Relies on LLM reasoning for conflict detection | Medium | Defer | Ask explicitly about differences between sources |
 
 **Getting Better Results:**
 - Ask "Compare sources on X" to see differences
@@ -208,20 +230,32 @@ This MVP has the following limitations documented in [EXP-001](docs/experiments/
 
 ## Roadmap
 
-### Sprint 1 (Complete)
-- [x] Project setup
-- [x] Document ingestion pipeline (PDF, MD, TXT)
+### Sprint 1: Core RAG System (Complete)
+- [x] Project setup and document ingestion pipeline
 - [x] Vector database integration (ChromaDB)
 - [x] RAG chain with multi-provider LLM support
 - [x] FastAPI backend with REST API
 - [x] MLflow evaluation framework
+- [x] 84 tests, 73% coverage
 
-### Sprint 2 (In Progress)
-- [x] Streamlit UI
-- [ ] German language support
-- [ ] Pinecone cloud vector database
-- [ ] Hybrid search (BM25 + semantic)
-- [ ] Docker deployment
+### Sprint 2: User Interface (Complete)
+- [x] Streamlit UI with HTTP backend communication
+- [x] Multi-file document upload
+- [x] Chat interface with source citations
+- [x] EXP-001: Multi-source conflict detection experiment
+
+### Sprint 3: Experiments & Optimization (In Progress)
+
+*Experiment-driven development following [DSM v1.3.1](https://github.com/albertodiazdurana/agentic-ai-data-science-methodology) methodology.*
+
+| Day | Feature | Experiment |
+|-----|---------|------------|
+| 7 | German Language Support | EXP-002: Cross-lingual retrieval |
+| 8 | Hybrid Search (BM25 + semantic) | EXP-003: Retrieval strategy comparison |
+| 9 | Performance & Robustness | EXP-004: Latency & adversarial testing |
+| 10 | Docker Deployment | EXP-005: End-to-end validation |
+
+See [Sprint 3 Plan](docs/plan/sprint-3-plan.md) for details.
 
 ## License
 
